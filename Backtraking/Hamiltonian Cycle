@@ -1,0 +1,80 @@
+public class HamiltonianCycle {
+   static final int NODE = 5;
+   static int[][] graph = {
+      {0, 1, 0, 1, 0},
+      {1, 0, 1, 1, 1},
+      {0, 1, 0, 0, 1},
+      {1, 1, 0, 0, 1},
+      {0, 1, 1, 1, 0}
+   };
+   static int[] path = new int[NODE];
+
+   static void displayCycle() {
+      System.out.print("Cycle Found: ");
+      for (int i = 0; i < NODE; i++)
+         System.out.print(path[i] + " ");
+      System.out.println(path[0]);
+   }
+
+   // method to check if adding vertex v to the path is valid
+
+static boolean isValid(int v, int k) {
+      // If there is no edge between path[k-1] and v
+
+      if (graph[path[k - 1]][v] == 0)
+         return false;
+
+      // Check if vertex v is already taken in the path
+
+      for (int i = 0; i < k; i++)
+         if (path[i] == v)
+            return false;
+      return true;
+   }
+
+   // method to find the Hamiltonian cycle
+
+   static boolean cycleFound(int k) {
+
+      // When all vertices are in the path
+
+      if (k == NODE) {
+
+         // Check if there is an edge between the last and first vertex
+
+         if (graph[path[k - 1]][path[0]] == 1)
+            return true;
+         else
+            return false;
+      }
+
+      // adding each vertex (except the starting point) to the path
+
+      for (int v = 1; v < NODE; v++) {
+         if (isValid(v, k)) {
+            path[k] = v;
+            if (cycleFound(k + 1))
+               return true;
+               path[k] = -1;
+         }
+      }
+      return false;
+   }
+
+   // method to find and display the Hamiltonian cycle
+
+   static boolean hamiltonianCycle() {
+      for (int i = 0; i < NODE; i++)
+         path[i] = -1;
+      path[0] = 0;
+      if (!cycleFound(1)) {
+         System.out.println("Solution does not exist");
+         return false;
+      }
+      displayCycle();
+      return true;
+   }
+   public static void main(String[] args) {
+      hamiltonianCycle();
+   }
+}
